@@ -18,14 +18,14 @@ module.exports = function(grunt) {
     'env:prod',
     'clean:all',
     'copy:templates',
-    'webpack:prod']);
+    'shell:prod']);
 
   grunt.registerTask('build', [
     'config:dev',
     'shell:buildBinary:linux:' + arch,
     'shell:downloadDockerBinary:linux:' + arch,
     'copy:templates',
-    'webpack:dev'
+    'shell:dev'
   ]);
 
   grunt.registerTask('build-server', [
@@ -44,7 +44,7 @@ module.exports = function(grunt) {
         'copy:templates',
         'shell:buildBinary:' + p + ':' + a,
         'shell:downloadDockerBinary:' + p + ':' + a,
-        'webpack:prod'
+        'shell:prod'
       ]);
     });
 
@@ -57,7 +57,7 @@ module.exports = function(grunt) {
         'copy:templates',
         'shell:buildBinaryOnDevOps:' + p + ':' + a,
         'shell:downloadDockerBinary:' + p + ':' + a,
-        'webpack:prod'
+        'shell:prod'
       ]);
     });
 
@@ -68,7 +68,7 @@ module.exports = function(grunt) {
   grunt.registerTask('run-dev', [
     'config:dev',
     'build-server',
-    'webpack:devWatch'
+    'shell:devWatch'
   ]);
   grunt.registerTask('clear', ['clean:app']);
 
@@ -218,5 +218,17 @@ gruntfile_cfg.shell = {
   buildBinary: { command: shell_buildBinary },
   buildBinaryOnDevOps: { command: shell_buildBinaryOnDevOps },
   run: { command: shell_run },
-  downloadDockerBinary: { command: shell_downloadDockerBinary }
+  downloadDockerBinary: { command: shell_downloadDockerBinary },
+  dev: {command: 'webpack --display verbose --config ./webpack/webpack.develop.js',
+  options: {
+      execOptions: {
+          maxBuffer: Infinity
+      }
+  }},
+  prod: {command: 'webpack --display verbose --config ./webpack/webpack.production.js',
+  options: {
+      execOptions: {
+          maxBuffer: Infinity
+      }
+  }}
 };

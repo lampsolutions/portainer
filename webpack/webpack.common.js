@@ -11,6 +11,7 @@ const npmPackage = require('../package.json');
 const projectRoot = path.resolve(__dirname, '..');
 
 module.exports = {
+  // stats: 'verbose',
   entry: {
     main: './app/__module.js'
   },
@@ -43,7 +44,12 @@ module.exports = {
               relativeTo: projectRoot + '/'
             }
           },
-          'html-loader'
+          {
+            loader: 'html-loader',
+            options: {
+              attrs: [':ng-include']
+            }
+          }
           // { loader: 'html-loader' }
         ]
       },
