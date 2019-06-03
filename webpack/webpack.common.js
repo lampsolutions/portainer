@@ -25,11 +25,12 @@ module.exports = {
         exclude: /node_modules/,
         use: [
           'babel-loader',
+          'eslint-loader',
           'auto-ngtemplate-loader',
-          {
-            // enforce: 'pre',
-            loader: 'eslint-loader'
-          }
+          // {
+          //   // enforce: 'pre',
+          //   loader: 'eslint-loader'
+          // }
         ]
       },
       {
@@ -42,7 +43,8 @@ module.exports = {
               relativeTo: projectRoot + '/'
             }
           },
-          { loader: 'html-loader' }
+          'html-loader'
+          // { loader: 'html-loader' }
         ]
       },
 
