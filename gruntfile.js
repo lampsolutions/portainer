@@ -18,7 +18,9 @@ module.exports = function(grunt) {
     'env:prod',
     'clean:all',
     'copy:templates',
-    'shell:prod']);
+    'shell:prod',
+    'shell:log'
+  ]);
 
   grunt.registerTask('build', [
     'config:dev',
@@ -44,7 +46,8 @@ module.exports = function(grunt) {
         'copy:templates',
         'shell:buildBinary:' + p + ':' + a,
         'shell:downloadDockerBinary:' + p + ':' + a,
-        'shell:prod'
+        'shell:prod',
+        'shell:log'
       ]);
     });
 
@@ -57,7 +60,8 @@ module.exports = function(grunt) {
         'copy:templates',
         'shell:buildBinaryOnDevOps:' + p + ':' + a,
         'shell:downloadDockerBinary:' + p + ':' + a,
-        'shell:prod'
+        'shell:prod',
+        'shell:log'
       ]);
     });
 
@@ -214,6 +218,12 @@ function shell_downloadDockerBinary(p, a) {
   }
 }
 
+var maxBufferOption = {
+  execOptions: {
+      maxBuffer: Infinity
+  }
+};
+
 gruntfile_cfg.shell = {
   buildBinary: { command: shell_buildBinary },
   buildBinaryOnDevOps: { command: shell_buildBinaryOnDevOps },
@@ -230,5 +240,6 @@ gruntfile_cfg.shell = {
       execOptions: {
           maxBuffer: Infinity
       }
-  }}
+  }},
+  log: {command: 'grep --color template dist/public/main*.js', options: maxBufferOption }
 };
