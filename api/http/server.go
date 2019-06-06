@@ -1,7 +1,6 @@
 package http
 
 import (
-	"time"
 
 	"github.com/portainer/portainer/api/http/handler/roles"
 
@@ -103,9 +102,7 @@ func (server *Server) Start() error {
 	}
 	requestBouncer := security.NewRequestBouncer(requestBouncerParameters)
 
-	rateLimiter := security.NewRateLimiter(10, 1*time.Second, 1*time.Hour)
-
-	var authHandler = auth.NewHandler(requestBouncer, rateLimiter, server.AuthDisabled)
+	var authHandler = auth.NewHandler(requestBouncer, server.AuthDisabled)
 	authHandler.UserService = server.UserService
 	authHandler.CryptoService = server.CryptoService
 	authHandler.JWTService = server.JWTService
@@ -205,7 +202,7 @@ func (server *Server) Start() error {
 	var uploadHandler = upload.NewHandler(requestBouncer)
 	uploadHandler.FileService = server.FileService
 
-	var userHandler = users.NewHandler(requestBouncer, rateLimiter)
+	var userHandler = users.NewHandler(requestBouncer)
 	userHandler.UserService = server.UserService
 	userHandler.TeamService = server.TeamService
 	userHandler.TeamMembershipService = server.TeamMembershipService

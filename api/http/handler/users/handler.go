@@ -26,7 +26,7 @@ type Handler struct {
 }
 
 // NewHandler creates a handler to manage user operations.
-func NewHandler(bouncer *security.RequestBouncer, rateLimiter *security.RateLimiter) *Handler {
+func NewHandler(bouncer *security.RequestBouncer) *Handler {
 	h := &Handler{
 		Router: mux.NewRouter(),
 	}
@@ -43,7 +43,7 @@ func NewHandler(bouncer *security.RequestBouncer, rateLimiter *security.RateLimi
 	h.Handle("/users/{id}/memberships",
 		bouncer.RestrictedAccess(httperror.LoggerHandler(h.userMemberships))).Methods(http.MethodGet)
 	h.Handle("/users/{id}/passwd",
-		rateLimiter.LimitAccess(bouncer.RestrictedAccess(httperror.LoggerHandler(h.userUpdatePassword)))).Methods(http.MethodPut)
+		bouncer.RestrictedAccess(httperror.LoggerHandler(h.userUpdatePassword))).Methods(http.MethodPut)
 	h.Handle("/users/admin/check",
 		bouncer.PublicAccess(httperror.LoggerHandler(h.adminCheck))).Methods(http.MethodGet)
 	h.Handle("/users/admin/init",

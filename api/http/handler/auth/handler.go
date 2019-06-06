@@ -37,16 +37,16 @@ type Handler struct {
 }
 
 // NewHandler creates a handler to manage authentication operations.
-func NewHandler(bouncer *security.RequestBouncer, rateLimiter *security.RateLimiter, authDisabled bool) *Handler {
+func NewHandler(bouncer *security.RequestBouncer, authDisabled bool) *Handler {
 	h := &Handler{
 		Router:       mux.NewRouter(),
 		authDisabled: authDisabled,
 	}
 
 	h.Handle("/auth/oauth/validate",
-		rateLimiter.LimitAccess(bouncer.PublicAccess(httperror.LoggerHandler(h.validateOAuth)))).Methods(http.MethodPost)
+		bouncer.PublicAccess(httperror.LoggerHandler(h.validateOAuth))).Methods(http.MethodPost)
 	h.Handle("/auth",
-		rateLimiter.LimitAccess(bouncer.PublicAccess(httperror.LoggerHandler(h.authenticate)))).Methods(http.MethodPost)
+		bouncer.PublicAccess(httperror.LoggerHandler(h.authenticate))).Methods(http.MethodPost)
 
 	return h
 }
